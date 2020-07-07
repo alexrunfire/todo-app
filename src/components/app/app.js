@@ -9,13 +9,6 @@ import FormField from '../form-field';
 import './app.css';
 
 export default class App extends Component {
-  createTodoItem = (label) => ({
-    label,
-    important: false,
-    done: false,
-    id: uniqueId(),
-  })
-
   state = {
     todoData: [
       this.createTodoItem('Build React App'),
@@ -26,11 +19,44 @@ export default class App extends Component {
     filter: 'all',
   };
 
+  createTodoItem = (label) => ({
+    label,
+    important: false,
+    done: false,
+    id: uniqueId(),
+  })
+
+  setNewStateOnTopPanel = (key, value) => {
+    this.setState((state) => ({
+      ...state,
+      [key]: value,
+    }));
+  }
+
+  findItemIdx = (todoData, id) => todoData.findIndex((elem) => elem.id === id)
+
+  findArrayParts = (todoData, itemIndex) => {
+    const newArrayBegin = todoData.slice(0, itemIndex);
+    const newArrayEnd = todoData.slice(itemIndex + 1);
+    return { newArrayBegin, newArrayEnd };
+  }
+
+  setNewStateOnToggle = (id, property) => {
+    const { todoData } = this.state;
+    const itemIndex = this.findItemIdx(todoData, id);
+    const oldItem = todoData[itemIndex];
+    const newItem = { ...oldItem, [property]: !oldItem[property] };
+    const { newArrayBegin, newArrayEnd } = this.findArrayParts(todoData, itemIndex);
+    const newArray = [...newArrayBegin, newItem, ...newArrayEnd];
+    this.setState({
+      todoData: newArray,
+    });
+  }
+
   deleteItem = (id) => {
     this.setState(({ todoData }) => {
-      const itemIndex = todoData.findIndex((elem) => elem.id === id);
-      const newArrayBegin = todoData.slice(0, itemIndex);
-      const newArrayEnd = todoData.slice(itemIndex + 1);
+      const itemIndex = this.findItemIdx(todoData, id);
+      const { newArrayBegin, newArrayEnd } = this.findArrayParts(todoData, itemIndex);
       const newArray = [...newArrayBegin, ...newArrayEnd];
       return {
         todoData: newArray,
@@ -48,15 +74,6 @@ export default class App extends Component {
     });
   }
 
-  toggleProperty = (todoData, id, property) => {
-    const itemIndex = todoData.findIndex((elem) => elem.id === id);
-    const oldItem = todoData[itemIndex];
-    const newItem = { ...oldItem, [property]: !oldItem[property] };
-    const newArrayBegin = todoData.slice(0, itemIndex);
-    const newArrayEnd = todoData.slice(itemIndex + 1);
-    return [...newArrayBegin, newItem, ...newArrayEnd];
-  }
-
   searchItems = (items, text) => items.filter(
     ({ label }) => label.toLowerCase().includes(text.toLowerCase()),
   );
@@ -71,45 +88,17 @@ export default class App extends Component {
     return todoData;
   }
 
-  onSearch = (search) => {
-    this.setState((state) => ({
-      ...state,
-      search,
-    }));
-  }
+  onToggleImportant = (id) => this.setNewStateOnToggle(id, 'important')
 
-  onToggleImportant = (id) => {
-    this.setState(({ todoData }) => ({
-      todoData: this.toggleProperty(todoData, id, 'important'),
-    }));
-  };
+  onToggleDone = (id) => this.setNewStateOnToggle(id, 'done')
 
-  onToggleDone = (id) => {
-    this.setState(({ todoData }) => ({
-      todoData: this.toggleProperty(todoData, id, 'done'),
-    }));
-  };
+  onSearch = (search) => this.setNewStateOnTopPanel(search, search)
 
-  onAll = () => {
-    this.setState((state) => ({
-      ...state,
-      filter: 'all',
-    }));
-  }
+  onAll = () => this.setNewStateOnTopPanel('filter', 'all')
 
-  onActive = () => {
-    this.setState((state) => ({
-      ...state,
-      filter: 'active',
-    }));
-  }
+  onActive = () => this.setNewStateOnTopPanel('filter', 'active')
 
-  onDone = () => {
-    this.setState((state) => ({
-      ...state,
-      filter: 'done',
-    }));
-  }
+  onDone = () => this.setNewStateOnTopPanel('filter', 'done')
 
   render() {
     const { todoData, search, filter } = this.state;
