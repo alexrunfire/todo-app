@@ -26,14 +26,14 @@ export default class App extends Component {
     filter: 'all',
   };
 
-  setNewState = (key, value) => this.setState({ [key]: value });
+  setNewState = (key, value) => this.setState({ [key]: value })
 
-  findItemIdx = (todoData, id) => todoData.findIndex((elem) => elem.id === id)
+  findItemIdx = (items, id) => items.findIndex((elem) => elem.id === id)
 
-  findArrayParts = (todoData, itemIndex) => {
-    const newArrayBegin = todoData.slice(0, itemIndex);
-    const newArrayEnd = todoData.slice(itemIndex + 1);
-    return { newArrayBegin, newArrayEnd };
+  findItemsParts = (items, itemIndex) => {
+    const newItemsBegin = items.slice(0, itemIndex);
+    const newItemsEnd = items.slice(itemIndex + 1);
+    return { newItemsBegin, newItemsEnd };
   }
 
   onToggle = (id, property) => {
@@ -41,38 +41,46 @@ export default class App extends Component {
     const itemIndex = this.findItemIdx(todoData, id);
     const oldItem = todoData[itemIndex];
     const newItem = { ...oldItem, [property]: !oldItem[property] };
-    const { newArrayBegin, newArrayEnd } = this.findArrayParts(todoData, itemIndex);
-    const newArray = [...newArrayBegin, newItem, ...newArrayEnd];
-    this.setNewState('todoData', newArray);
+    const { newItemsBegin, newItemsEnd } = this.findItemsParts(todoData, itemIndex);
+    const newItems = [...newItemsBegin, newItem, ...newItemsEnd];
+    this.setNewState('todoData', newItems);
   }
 
   deleteItem = (id) => {
     const { todoData } = this.state;
     const itemIndex = this.findItemIdx(todoData, id);
-    const { newArrayBegin, newArrayEnd } = this.findArrayParts(todoData, itemIndex);
-    const newArray = [...newArrayBegin, ...newArrayEnd];
-    this.setNewState('todoData', newArray);
+    const { newItemsBegin, newItemsEnd } = this.findItemsParts(todoData, itemIndex);
+    const newItems = [...newItemsBegin, ...newItemsEnd];
+    this.setNewState('todoData', newItems);
   }
 
   addItem = (label) => {
     const { todoData } = this.state;
     const newItem = this.createTodoItem(label);
-    const newArray = [...todoData, newItem];
-    this.setNewState('todoData', newArray);
+    const newItems = [...todoData, newItem];
+    this.setNewState('todoData', newItems);
   }
+
+  doneItems = (items) => items.filter(({ done }) => done)
 
   searchItems = (items, text) => items.filter(
     ({ label }) => label.toLowerCase().includes(text.toLowerCase()),
   );
 
-  filterItems = (todoData, selector) => {
-    if (selector === 'active') {
-      return todoData.filter(({ done }) => !done);
+  filterItems = (items, filter) => {
+    switch (filter) {
+      case 'all':
+        return items;
+
+      case 'active':
+        return items.filter(({ done }) => !done);
+
+      case 'done':
+        return this.doneItems(items);
+
+      default:
+        throw new Error(`Unknown filter type: ${filter}`);
     }
-    if (selector === 'done') {
-      return todoData.filter(({ done }) => done);
-    }
-    return todoData;
   }
 
   onToggleImportant = (id) => this.onToggle(id, 'important')
@@ -81,15 +89,11 @@ export default class App extends Component {
 
   onSearch = (search) => this.setNewState('search', search)
 
-  onAll = () => this.setNewState('filter', 'all')
-
-  onActive = () => this.setNewState('filter', 'active')
-
-  onDone = () => this.setNewState('filter', 'done')
+  onFilter = (filter) => this.setNewState('filter', filter)
 
   render() {
     const { todoData, search, filter } = this.state;
-    const doneCount = todoData.filter(({ done }) => done).length;
+    const doneCount = this.doneItems(todoData).length;
     const toDoCount = todoData.length - doneCount;
     const filteredItems = this.filterItems(todoData, filter);
     const currentItems = this.searchItems(filteredItems, search);
@@ -100,9 +104,7 @@ export default class App extends Component {
         <SearchPanel onSearch={this.onSearch}/>
         <ItemStatusFilter
           filter={filter}
-          onAll={this.onAll}
-          onActive={this.onActive}
-          onDone={this.onDone}
+          onFilter={this.onFilter}
         />
     </div>
     <TodoList

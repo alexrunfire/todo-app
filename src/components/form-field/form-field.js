@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { func } from 'prop-types';
+
 import './form-field.css';
 
 class FormField extends Component {
@@ -45,9 +45,5 @@ class FormField extends Component {
   </form>);
   }
 }
-
-FormField.propTypes = {
-  onAdded: func,
-};
 
 export default FormField;

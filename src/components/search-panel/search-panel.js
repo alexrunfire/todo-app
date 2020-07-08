@@ -1,5 +1,5 @@
 import React from 'react';
-import { func } from 'prop-types';
+
 import './search-panel.css';
 
 const SearchPanel = ({ onSearch }) => (
@@ -10,7 +10,5 @@ const SearchPanel = ({ onSearch }) => (
     onChange={(e) => onSearch(e.target.value)}
   />
 );
-SearchPanel.propTypes = {
-  onSearch: func,
-};
+
 export default SearchPanel;

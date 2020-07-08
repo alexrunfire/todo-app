@@ -1,5 +1,5 @@
 import React from 'react';
-import { string, func, bool } from 'prop-types';
+
 import './todo-list-item.css';
 
 const getClassNames = (important, done) => {
@@ -36,12 +36,5 @@ const TodoListItem = ({
       </button>
     </span>
 );
-TodoListItem.propTypes = {
-  label: string,
-  onDeleted: func,
-  onToggleImportant: func,
-  onToggleDone: func,
-  important: bool,
-  done: bool,
-};
+
 export default TodoListItem;

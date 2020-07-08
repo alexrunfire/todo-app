@@ -1,5 +1,5 @@
 import React from 'react';
-import { number } from 'prop-types';
+
 import './app-header.css';
 
 const AppHeader = ({ toDo, done }) => (
@@ -8,8 +8,4 @@ const AppHeader = ({ toDo, done }) => (
       <h2>{toDo} more to do, {done} done</h2>
     </div>
 );
-AppHeader.propTypes = {
-  toDo: number,
-  done: number,
-};
 export default AppHeader;

@@ -1,6 +1,6 @@
 import React from 'react';
-import { object, arrayOf, func } from 'prop-types';
 import TodoListItem from '../todo-list-item/todo-list-item';
+
 import './todo-list.css';
 
 const TodoList = ({
@@ -18,10 +18,5 @@ const TodoList = ({
   );
   return <ul className="list-group todo-list">{elements}</ul>;
 };
-TodoList.propTypes = {
-  todos: arrayOf(object),
-  onDeleted: func,
-  onToggleImportant: func,
-  onToggleDone: func,
-};
+
 export default TodoList;
