@@ -9,6 +9,13 @@ import FormField from '../form-field';
 import './app.css';
 
 export default class App extends Component {
+  createTodoItem = (label) => ({
+    label,
+    important: false,
+    done: false,
+    id: uniqueId(),
+  })
+
   state = {
     todoData: [
       this.createTodoItem('Build React App'),
@@ -19,19 +26,7 @@ export default class App extends Component {
     filter: 'all',
   };
 
-  createTodoItem = (label) => ({
-    label,
-    important: false,
-    done: false,
-    id: uniqueId(),
-  })
-
-  setNewStateOnTopPanel = (key, value) => {
-    this.setState((state) => ({
-      ...state,
-      [key]: value,
-    }));
-  }
+  setNewState = (key, value) => this.setState({ [key]: value });
 
   findItemIdx = (todoData, id) => todoData.findIndex((elem) => elem.id === id)
 
@@ -41,37 +36,29 @@ export default class App extends Component {
     return { newArrayBegin, newArrayEnd };
   }
 
-  setNewStateOnToggle = (id, property) => {
+  onToggle = (id, property) => {
     const { todoData } = this.state;
     const itemIndex = this.findItemIdx(todoData, id);
     const oldItem = todoData[itemIndex];
     const newItem = { ...oldItem, [property]: !oldItem[property] };
     const { newArrayBegin, newArrayEnd } = this.findArrayParts(todoData, itemIndex);
     const newArray = [...newArrayBegin, newItem, ...newArrayEnd];
-    this.setState({
-      todoData: newArray,
-    });
+    this.setNewState('todoData', newArray);
   }
 
   deleteItem = (id) => {
-    this.setState(({ todoData }) => {
-      const itemIndex = this.findItemIdx(todoData, id);
-      const { newArrayBegin, newArrayEnd } = this.findArrayParts(todoData, itemIndex);
-      const newArray = [...newArrayBegin, ...newArrayEnd];
-      return {
-        todoData: newArray,
-      };
-    });
+    const { todoData } = this.state;
+    const itemIndex = this.findItemIdx(todoData, id);
+    const { newArrayBegin, newArrayEnd } = this.findArrayParts(todoData, itemIndex);
+    const newArray = [...newArrayBegin, ...newArrayEnd];
+    this.setNewState('todoData', newArray);
   }
 
   addItem = (label) => {
+    const { todoData } = this.state;
     const newItem = this.createTodoItem(label);
-    this.setState(({ todoData }) => {
-      const newArray = [...todoData, newItem];
-      return {
-        todoData: newArray,
-      };
-    });
+    const newArray = [...todoData, newItem];
+    this.setNewState('todoData', newArray);
   }
 
   searchItems = (items, text) => items.filter(
@@ -88,17 +75,17 @@ export default class App extends Component {
     return todoData;
   }
 
-  onToggleImportant = (id) => this.setNewStateOnToggle(id, 'important')
+  onToggleImportant = (id) => this.onToggle(id, 'important')
 
-  onToggleDone = (id) => this.setNewStateOnToggle(id, 'done')
+  onToggleDone = (id) => this.onToggle(id, 'done')
 
-  onSearch = (search) => this.setNewStateOnTopPanel(search, search)
+  onSearch = (search) => this.setNewState('search', search)
 
-  onAll = () => this.setNewStateOnTopPanel('filter', 'all')
+  onAll = () => this.setNewState('filter', 'all')
 
-  onActive = () => this.setNewStateOnTopPanel('filter', 'active')
+  onActive = () => this.setNewState('filter', 'active')
 
-  onDone = () => this.setNewStateOnTopPanel('filter', 'done')
+  onDone = () => this.setNewState('filter', 'done')
 
   render() {
     const { todoData, search, filter } = this.state;
