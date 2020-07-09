@@ -9,13 +9,6 @@ import FormField from '../form-field';
 import './app.css';
 
 export default class App extends Component {
-  createTodoItem = (label) => ({
-    label,
-    important: false,
-    done: false,
-    id: uniqueId(),
-  })
-
   state = {
     todoData: [
       this.createTodoItem('Build React App'),
@@ -25,6 +18,13 @@ export default class App extends Component {
     search: '',
     filter: 'all',
   };
+
+  createTodoItem = (label) => ({
+    label,
+    important: false,
+    done: false,
+    id: uniqueId(),
+  })
 
   setNewState = (key, value) => this.setState({ [key]: value })
 
@@ -98,22 +98,23 @@ export default class App extends Component {
     const filteredItems = this.filterItems(todoData, filter);
     const currentItems = this.searchItems(filteredItems, search);
     return (
-  <div className="todo-app">
-    <AppHeader toDo={toDoCount} done={doneCount}/>
-    <div className="top-panel d-flex">
-        <SearchPanel onSearch={this.onSearch}/>
-        <ItemStatusFilter
-          filter={filter}
-          onFilter={this.onFilter}
+      <div className="todo-app">
+        <AppHeader toDo={toDoCount} done={doneCount} />
+        <div className="top-panel d-flex">
+          <SearchPanel onSearch={this.onSearch} />
+          <ItemStatusFilter
+            filter={filter}
+            onFilter={this.onFilter}
+          />
+        </div>
+        <TodoList
+          todos={currentItems}
+          onDeleted={this.deleteItem}
+          onToggleImportant={this.onToggleImportant}
+          onToggleDone={this.onToggleDone}
         />
-    </div>
-    <TodoList
-      todos={currentItems}
-      onDeleted={this.deleteItem}
-      onToggleImportant={this.onToggleImportant}
-      onToggleDone={this.onToggleDone}
-    />
-    <FormField onAdded={this.addItem}/>
-  </div>);
+        <FormField onAdded={this.addItem} />
+      </div>
+    );
   }
 }

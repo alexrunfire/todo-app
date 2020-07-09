@@ -26,9 +26,9 @@ class ItemStatusFilter extends Component {
       );
     });
     return (
-    <div className="btn-group">
-      {buttons}
-    </div>
+      <div className="btn-group">
+        {buttons}
+      </div>
     );
   }
 }

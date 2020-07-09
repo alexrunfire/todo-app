@@ -26,23 +26,26 @@ class FormField extends Component {
 
   render() {
     return (
-    <form
-      className="form-field d-flex"
-      onSubmit={this.onFormSubmit}>
-    <input
-      type="text"
-      className="form-control"
-      placeholder="What needs to be done?"
-      onChange={(e) => this.onLabelChange(e.target.value)}
-      value={this.state.label}
-    />
-    <button
-      className="btn btn-outline-secondary"
-      disabled={this.state.disabled}
-    >
-    Add
-    </button>
-  </form>);
+      <form
+        className="form-field d-flex"
+        onSubmit={this.onFormSubmit}
+      >
+        <input
+          type="text"
+          className="form-control"
+          placeholder="What needs to be done?"
+          onChange={(e) => this.onLabelChange(e.target.value)}
+          value={this.state.label}
+        />
+        <button
+          type="button"
+          className="btn btn-outline-secondary"
+          disabled={this.state.disabled}
+        >
+          Add
+        </button>
+      </form>
+    );
   }
 }
 
