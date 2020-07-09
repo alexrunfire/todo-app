@@ -9,22 +9,22 @@ import FormField from '../form-field';
 import './app.css';
 
 export default class App extends Component {
-  state = {
-    todoData: [
-      this.createTodoItem('Build React App'),
-      this.createTodoItem('Drink Tea'),
-      this.createTodoItem('Drink Coffee'),
-    ],
-    search: '',
-    filter: 'all',
-  };
-
   createTodoItem = (label) => ({
     label,
     important: false,
     done: false,
     id: uniqueId(),
   })
+
+  state = {
+    todoData: [
+      this.createTodoItem('Make a million dollars'),
+      this.createTodoItem('Buy a house'),
+      this.createTodoItem('Land on Mars'),
+    ],
+    search: '',
+    filter: 'all',
+  };
 
   setNewState = (key, value) => this.setState({ [key]: value })
 

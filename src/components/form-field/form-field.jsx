@@ -31,14 +31,13 @@ class FormField extends Component {
         onSubmit={this.onFormSubmit}
       >
         <input
-          type="text"
           className="form-control"
           placeholder="What needs to be done?"
           onChange={(e) => this.onLabelChange(e.target.value)}
           value={this.state.label}
         />
         <button
-          type="button"
+          type="submit"
           className="btn btn-outline-secondary"
           disabled={this.state.disabled}
         >
