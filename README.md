@@ -1,6 +1,6 @@
-# todo App
+# todo app
 Configure your own list with deals you need to do!
-*The project was written in React*
+The project was written in React.
 ![Screenshot](screenshots/app-screenshot.png)
 
 ## Features
